@@ -5,9 +5,9 @@ import * as updateById from "./UpdateById";
 import * as deleteById from "./DeleteById";
 
 export const CidadesController = {
-    ...create,
-    ...getAll,
-    ...getById,
-    ...updateById,
-    ...deleteById,
-}
+	...create,
+	...getAll,
+	...getById,
+	...updateById,
+	...deleteById,
+};
