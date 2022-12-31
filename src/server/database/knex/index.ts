@@ -1,14 +1,15 @@
-import { knex } from 'knex';
-import { development, production, test } from "./Enviroment"
+import { knex } from "knex";
 
-const getEnviroment = () => {
-    switch (process.env.NODE_ENV) {
-        case "production": return production;
-        case "test": return test;
+import { development, production, test } from "./Environment";
 
-        default: return development;
-    }
 
-}
+const getEnvironment = () => {
+	switch (process.env.NODE_ENV) {
+		case "production": return production;
+		case "test": return test;
 
-export const Knex = knex(getEnviroment());
+		default: return development;
+	}
+};
+
+export const Knex = knex(getEnvironment());
