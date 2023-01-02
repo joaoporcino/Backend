@@ -1,3 +1,4 @@
+import { CidadesProvider } from "./../../database/providers/cidades/index";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import * as yup from "yup";
@@ -23,13 +24,23 @@ export const updateByIdValidation = validation((getSchema) => ({
 
 export const updateById = async (req: Request<IParamProps, {}, IBodyProps>, res: Response) => {
 
-	if(Number(req.params.id) === 99999){
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+	if (!req.params.id) {
+		return res.status(StatusCodes.BAD_REQUEST).json({
 			errors: {
-				default: "Registro não encontrado!"
+				default: "O parâmetro 'id' precisa ser informado"
 			}
 		});
 	}
 
-	return res.status(StatusCodes.NO_CONTENT).send("Registro atualizado!");
+	const result = await CidadesProvider.udateById(req.params.id, req.body);
+
+	if (result instanceof Error) {
+		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+			errors: {
+				default: result.message
+			}
+		});
+	}
+
+	return res.status(StatusCodes.NO_CONTENT).json(result);
 };
