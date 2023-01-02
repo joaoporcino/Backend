@@ -17,5 +17,4 @@ export const create = async (cidade: Omit<ICidade, "id">): Promise<number | Erro
 		console.log(error);
 		return new Error("Erro ao cadastrar o registro");
 	}
-
 };
