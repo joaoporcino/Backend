@@ -5,6 +5,16 @@ import { testServer } from "../jest.setup";
 
 describe("Pessoas - GetAll", () => {
 
+	let cidadeId: number | undefined = undefined;
+
+	beforeAll(async () => {
+		const resCidade = await testServer
+			.post("/cidades")
+			.send({nome: "teste"});
+        
+		cidadeId = resCidade.body;
+	});
+
 	it("Buscar todos os registros", async () => {
 
 		const res1 = await testServer
@@ -12,7 +22,7 @@ describe("Pessoas - GetAll", () => {
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara@email.com",
-				cidadeId: 1
+				cidadeId
 			});
 
 		expect(res1.statusCode).toEqual(StatusCodes.CREATED);

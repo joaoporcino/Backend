@@ -5,6 +5,16 @@ import { testServer } from "../jest.setup";
 
 describe("Pessoas - GetById", () => {
 
+	let cidadeId: number | undefined = undefined;
+
+	beforeAll(async () => {
+		const resCidade = await testServer
+			.post("/cidades")
+			.send({nome: "teste"});
+        
+		cidadeId = resCidade.body;
+	});
+
 	it("Busca registro por id", async () => {
 
 		const res1 = await testServer
@@ -12,7 +22,7 @@ describe("Pessoas - GetById", () => {
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara@email.com",
-				cidadeId: 1
+				cidadeId
 			});
 
 		expect(res1.statusCode).toEqual(StatusCodes.CREATED);
@@ -23,9 +33,10 @@ describe("Pessoas - GetById", () => {
 
 		expect(resBuscada.statusCode).toEqual(StatusCodes.OK);
 		expect(resBuscada.body).toHaveProperty("nomeCompleto");
-		expect(resBuscada.body).toHaveProperty("nomeCompleto");
+		expect(resBuscada.body).toHaveProperty("email");
 		expect(resBuscada.body).toHaveProperty("cidadeId");
 	});
+
 	it("Tenta buscar registro que não existe", async () => {
 
 		const res1 = await testServer

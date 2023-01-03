@@ -5,14 +5,24 @@ import { testServer } from "../jest.setup";
 
 describe("Pessoas - DeleteById", () => {
 
+	let cidadeId: number | undefined = undefined;
+
+	beforeAll(async () => {
+		const resCidade = await testServer
+			.post("/cidades")
+			.send({nome: "teste"});
+        
+		cidadeId = resCidade.body;
+	});
+
 	it("Apaga registro", async () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
 			.send({ 
 				nomeCompleto: "Ana Clara",
-				email: "anaclara@email.com",
-				cidadeId: 1
+				email: "ana@email.com",
+				cidadeId
 			});
 
 		expect(res1.statusCode).toEqual(StatusCodes.CREATED);
@@ -23,6 +33,7 @@ describe("Pessoas - DeleteById", () => {
 
 		expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT);
 	});
+
 	it("Tenta apagar registro que não existe", async () => {
 
 		const res1 = await testServer
