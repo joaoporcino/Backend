@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import * as yup from "yup";
 
 import { validation } from "../../shared/middleware";
-import { CidadesProvider } from "./../../database/providers/cidades";
+import { PessoasProvider } from "../../database/providers/pessoas";
 
 interface IParamProps {
     id?: number;
@@ -26,7 +26,7 @@ export const getById = async (req: Request<IParamProps>, res: Response) => {
 		});
 	}
 
-	const result = await CidadesProvider.getById(req.params.id);
+	const result = await PessoasProvider.getById(req.params.id);
 
 	if(result instanceof Error){
 		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
