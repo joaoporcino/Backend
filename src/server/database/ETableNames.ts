@@ -2,5 +2,7 @@
 
 export enum ETableNames {
     cidade = "cidade",
-    pessoa = "pessoa"
+    pessoa = "pessoa",
+    endereco = "endereco",
+    usuario = "usuario"
   }
