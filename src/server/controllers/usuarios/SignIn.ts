@@ -1,3 +1,4 @@
+import { PasswordCrypt } from "./../../shared/services";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import * as yup from "yup";
@@ -29,7 +30,9 @@ export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
 		});
 	}
 
-	if(senha !== result.senha) {
+	const passwordMatch = PasswordCrypt.verifyPassword(senha, result.senha);
+
+	if(!passwordMatch) {
 		return res.status(StatusCodes.UNAUTHORIZED).json({
 			errors: {
 				default: "Email ou senha inválidos"
