@@ -3,11 +3,22 @@ import { testServer } from "../jest.setup";
 
 describe("Pessoas - Create", () => {
 
+	let accessToken = "";
+
+	beforeAll(async () => {
+		const email = "create-pessoas@email.com";
+		await testServer.post("/cadastrar").send({ nome: "Teste", email, senha: "12345678"});
+		const signInRes = await testServer.post("/entrar").send({ email, senha: "12345678"});
+
+		accessToken = signInRes.body.accessToken;
+	});
+
 	let cidadeId: number | undefined = undefined;
 
 	beforeAll(async () => {
 		const resCidade = await testServer
 			.post("/cidades")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({nome: "teste"});
         
 		cidadeId = resCidade.body;
@@ -17,6 +28,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara@email.com",
@@ -32,6 +44,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "An",
 				email: "anaclara@email.com",
@@ -47,6 +60,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara",
@@ -62,6 +76,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara",
@@ -77,6 +92,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara2@email.com",
@@ -89,6 +105,7 @@ describe("Pessoas - Create", () => {
 
 		const res2 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara2@email.com",
@@ -104,6 +121,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({ 
 				nomeCompleto: "Ana Clara",
 				email: "anaclara@gmail.com",
@@ -119,6 +137,7 @@ describe("Pessoas - Create", () => {
 
 		const res1 = await testServer
 			.post("/pessoas")
+			.set({ Authorization: `Bearer ${accessToken}` })
 			.send({});
     
     
@@ -126,5 +145,20 @@ describe("Pessoas - Create", () => {
 		expect(res1.body).toHaveProperty("errors.body.nomeCompleto");
 		expect(res1.body).toHaveProperty("errors.body.email");
 		expect(res1.body).toHaveProperty("errors.body.cidadeId");
+	});
+
+	it("Tenta cria registro sem accessToken", async () => {
+
+		const res1 = await testServer
+			.post("/pessoas")
+			.send({ 
+				nomeCompleto: "Ana Clara",
+				email: "anaclara@email.com",
+				cidadeId
+			});
+    
+    
+		expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
+		expect(res1.body).toHaveProperty("errors.default");
 	});
 });

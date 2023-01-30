@@ -12,7 +12,6 @@ export const signUpValidation = validation((getSchema) => ({
 	body: getSchema<IBodyProps>(yup.object().shape({
 		nome: yup.string().required().min(3),
 		email: yup.string().required().email().min(5),
-		cidadeId: yup.number().required().min(1),
 		senha: yup.string().required().min(8)
 	}))
 }));

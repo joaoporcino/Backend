@@ -1,3 +1,4 @@
+import { JWTServer } from "./../../shared/services/JWTServices";
 import { PasswordCrypt } from "./../../shared/services";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
@@ -39,6 +40,17 @@ export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
 			}
 		});
 	} else {
-		return res.status(StatusCodes.OK).json({ accessToken: "teste.teste.testee"});
+
+		const accessToken = JWTServer.sign({ uid: result.id });
+		if (accessToken === "JWT_SECRET_NOT_FOUND") {
+			return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+				errors: {
+					default: "Erro ao gerar o token de acesso"
+				}
+			});
+		}
+
+
+		return res.status(StatusCodes.OK).json({ accessToken });
 	}
 };

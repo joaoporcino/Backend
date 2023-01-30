@@ -10,14 +10,6 @@ export async function up(knex: Knex) {
 			table.string("senha").notNullable().checkLength(">", 6);
 			table.string("email").index().unique().notNullable().checkLength(">", 6);
 
-			table
-				.bigInteger("cidadeId")
-				.index().notNullable()
-				.references("id")
-				.inTable(ETableNames.cidade)
-				.onUpdate("CASCADE")
-				.onDelete("RESTRICT");
-
 			table.comment("Tabela usada para armazenar usuarios do sistema.");
 		})
 		.then(() => {
