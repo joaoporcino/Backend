@@ -1,9 +1,9 @@
-import { JWTServer } from "./../../shared/services/JWTServices";
 import { PasswordCrypt } from "./../../shared/services";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import * as yup from "yup";
 
+import { JWTServer } from "./../../shared/services/JWTServices";
 import { IUsuario } from "../../database/models";
 import { validation } from "../../shared/middleware";
 import { UsuariosProvider } from "../../database/providers/usuarios";
@@ -31,7 +31,7 @@ export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
 		});
 	}
 
-	const passwordMatch = PasswordCrypt.verifyPassword(senha, result.senha);
+	const passwordMatch = await PasswordCrypt.verifyPassword(senha, result.senha);
 
 	if(!passwordMatch) {
 		return res.status(StatusCodes.UNAUTHORIZED).json({
